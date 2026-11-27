@@ -4,7 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Smart QR Menu</title>
+    <!-- Runs before first paint so the saved/system theme is applied without a flash of the wrong theme. -->
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('smartqr_theme');
+          var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          root.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+          root.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html[data-bs-theme='dark'] { background: #0f172a; }
+      html[data-bs-theme='light'] { background: #f8fafc; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

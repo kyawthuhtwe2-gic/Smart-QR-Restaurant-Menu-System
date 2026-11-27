@@ -5,7 +5,15 @@ export function formatPrice(price, currency) {
     return String(price);
   }
   try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount);
+    // Some currencies (MMK, JPY) default to 0 decimals, which would silently round 4.75 to 5.
+    // Keep the currency's usual minimum but never show fewer than 2 decimals of precision when needed.
+    const { minimumFractionDigits, maximumFractionDigits } = new Intl.NumberFormat(undefined, { style: 'currency', currency }).resolvedOptions();
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits,
+      maximumFractionDigits: Math.max(maximumFractionDigits, 2),
+    }).format(amount);
   } catch {
     const plain = amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     return currency ? `${plain} ${currency}` : plain;

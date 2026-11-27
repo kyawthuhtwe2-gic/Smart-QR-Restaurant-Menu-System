@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\MenuItemController;
 use App\Http\Controllers\Api\V1\PublicMenuController;
+use App\Http\Controllers\Api\V1\RestaurantSettingsController;
 use App\Http\Controllers\Api\V1\RestaurantTableController;
 use App\Http\Controllers\Api\V1\TableQrController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,9 @@ Route::prefix('v1')->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('auth/me', [AuthController::class, 'me']);
         Route::get('dashboard', [DashboardController::class, 'index']);
+
+        Route::get('settings/restaurant', [RestaurantSettingsController::class, 'show']);
+        Route::put('settings/restaurant', [RestaurantSettingsController::class, 'update']);
 
         Route::post('categories/reorder', [CategoryController::class, 'reorder']);
         Route::apiResource('categories', CategoryController::class);

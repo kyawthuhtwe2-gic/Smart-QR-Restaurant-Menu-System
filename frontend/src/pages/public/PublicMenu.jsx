@@ -1,19 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { QrCode, RefreshCw, SearchX, Star, TriangleAlert, UtensilsCrossed } from 'lucide-react';
 import usePublicMenu from '../../hooks/usePublicMenu';
 import { matchesSearch } from '../../utils/format';
 import Spinner from '../../components/common/Spinner';
+import ThemeToggle from '../../components/common/ThemeToggle';
 import MenuHeader from '../../components/menu/MenuHeader';
 import MenuSearch from '../../components/menu/MenuSearch';
 import CategoryNav from '../../components/menu/CategoryNav';
 import MenuItemCard from '../../components/menu/MenuItemCard';
 import './publicMenu.css';
 
-function Notice({ title, children, action }) {
+function Notice({ icon: Icon, title, children, action }) {
   return (
-    <div className="pm-notice text-center">
+    <div className="pm-notice">
+      <div className="pm-notice-theme">
+        <ThemeToggle />
+      </div>
+      <div className="pm-notice-icon">
+        <Icon size={30} aria-hidden="true" />
+      </div>
       <h1 className="h4">{title}</h1>
-      <p className="text-muted">{children}</p>
+      <p className="text-secondary">{children}</p>
       {action}
     </div>
   );
@@ -36,10 +44,7 @@ export default function PublicMenu() {
       .filter((category) => category.items.length > 0);
   }, [data, search]);
 
-  const featured = useMemo(
-    () => (data ? data.categories.flatMap((c) => c.items).filter((item) => item.is_featured) : []),
-    [data],
-  );
+  const featured = useMemo(() => (data ? data.categories.flatMap((c) => c.items).filter((item) => item.is_featured) : []), [data]);
 
   // Highlight the category currently at the top while scrolling.
   useEffect(() => {
@@ -69,7 +74,7 @@ export default function PublicMenu() {
   }
   if (status === 'invalid') {
     return (
-      <Notice title="QR code not valid">
+      <Notice icon={QrCode} title="QR code not valid">
         This QR code is invalid or no longer active. Please ask our staff for help.
       </Notice>
     );
@@ -77,9 +82,11 @@ export default function PublicMenu() {
   if (status === 'error') {
     return (
       <Notice
+        icon={TriangleAlert}
         title="Menu unavailable"
         action={
-          <button type="button" className="btn btn-primary" onClick={retry}>
+          <button type="button" className="btn btn-primary btn-ic" onClick={retry}>
+            <RefreshCw size={16} aria-hidden="true" />
             Try again
           </button>
         }
@@ -97,15 +104,14 @@ export default function PublicMenu() {
 
       <div className="pm-sticky">
         <MenuSearch value={search} onChange={setSearch} />
-        {!searching && data.categories.length > 0 && (
-          <CategoryNav categories={data.categories} activeId={activeId ?? data.categories[0].id} onSelect={scrollToCategory} />
-        )}
+        {!searching && data.categories.length > 0 && <CategoryNav categories={data.categories} activeId={activeId ?? data.categories[0].id} onSelect={scrollToCategory} />}
       </div>
 
       <main className="pm-main">
         {!searching && featured.length > 0 && (
           <section className="pm-section" aria-labelledby="featured-title">
             <h2 id="featured-title" className="pm-section-title">
+              <Star size={20} className="text-warning" aria-hidden="true" />
               Featured
             </h2>
             <div className="pm-grid">
@@ -117,13 +123,7 @@ export default function PublicMenu() {
         )}
 
         {visibleCategories.map((category) => (
-          <section
-            key={category.id}
-            id={`category-${category.id}`}
-            data-category-id={category.id}
-            className="pm-section"
-            aria-labelledby={`category-title-${category.id}`}
-          >
+          <section key={category.id} id={`category-${category.id}`} data-category-id={category.id} className="pm-section" aria-labelledby={`category-title-${category.id}`}>
             <h2 id={`category-title-${category.id}`} className="pm-section-title">
               {category.name}
             </h2>
@@ -137,16 +137,12 @@ export default function PublicMenu() {
         ))}
 
         {visibleCategories.length === 0 && (
-          <p className="text-center text-muted py-5">
-            {searching ? `No dishes match "${search.trim()}".` : 'The menu is being updated. Please check back soon.'}
-          </p>
+          <div className="text-center text-secondary py-5">
+            {searching ? <SearchX size={36} className="mb-2" aria-hidden="true" /> : <UtensilsCrossed size={36} className="mb-2" aria-hidden="true" />}
+            <p className="mb-0">{searching ? `No dishes match "${search.trim()}".` : 'The menu is being updated. Please check back soon.'}</p>
+          </div>
         )}
       </main>
-
-      <footer className="pm-footer text-center">
-        {restaurant.address && <div>{restaurant.address}</div>}
-        {restaurant.phone && <div>{restaurant.phone}</div>}
-      </footer>
     </div>
   );
 }

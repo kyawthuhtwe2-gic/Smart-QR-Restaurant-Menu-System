@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, KeyRound, LoaderCircle, Lock, Mail } from 'lucide-react';
 import { resetPassword } from '../../api/auth';
 import { parseApiError } from '../../api/client';
+import Alert from '../../components/common/Alert';
 import FormField from '../../components/forms/FormField';
 
 export default function ResetPassword() {
@@ -35,17 +37,22 @@ export default function ResetPassword() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <h2 className="h5 mb-3">Reset password</h2>
-      {!token && <div className="alert alert-warning">Reset token missing. Use the link from your email.</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-      <FormField label="Email" name="email" type="email" value={form.email} onChange={handleChange} errors={errors} required />
-      <FormField label="New password" name="password" type="password" value={form.password} onChange={handleChange} errors={errors} autoComplete="new-password" required />
-      <FormField label="Confirm password" name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleChange} errors={errors} autoComplete="new-password" required />
-      <button type="submit" className="btn btn-primary w-100" disabled={submitting || !token}>
+      <h2 className="h5 fw-bold mb-1">Reset password</h2>
+      <p className="text-secondary mb-4">Choose a new password (at least 8 characters).</p>
+      {!token && <Alert type="warning">Reset token missing. Use the link from your email.</Alert>}
+      {error && <Alert>{error}</Alert>}
+      <FormField label="Email" name="email" type="email" icon={Mail} value={form.email} onChange={handleChange} errors={errors} required />
+      <FormField label="New password" name="password" type="password" icon={Lock} value={form.password} onChange={handleChange} errors={errors} autoComplete="new-password" required />
+      <FormField label="Confirm password" name="password_confirmation" type="password" icon={Lock} value={form.password_confirmation} onChange={handleChange} errors={errors} autoComplete="new-password" required />
+      <button type="submit" className="btn btn-primary btn-ic w-100" disabled={submitting || !token}>
+        {submitting ? <LoaderCircle size={17} className="spin" aria-hidden="true" /> : <KeyRound size={17} aria-hidden="true" />}
         {submitting ? 'Resetting...' : 'Reset password'}
       </button>
       <div className="text-center mt-3">
-        <Link to="/admin/login">Back to login</Link>
+        <Link to="/admin/login" className="d-inline-flex align-items-center gap-1">
+          <ArrowLeft size={16} aria-hidden="true" />
+          Back to login
+        </Link>
       </div>
     </form>
   );

@@ -1,0 +1,67 @@
+/* Printed sheets are always black on white (ink-friendly, and QR codes must stay high contrast),
+   so the card ignores the active theme. */
+.qp-page {
+  min-height: 100vh;
+  background: var(--app-bg);
+  padding: 1rem;
+}
+
+.qp-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.qp-card {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  color: #111827;
+  border: 2px solid #111827;
+  border-radius: 16px;
+  text-align: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.qp-restaurant {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.qp-table {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.25rem 1.25rem;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.qp-hint {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  .qp-page {
+    background: #fff;
+    padding: 0;
+  }
+
+  .qp-card {
+    max-width: none;
+    border-width: 3px;
+    break-inside: avoid;
+  }
+}

@@ -1,9 +1,14 @@
-export default function StatCard({ label, value, tone = 'primary' }) {
+export default function StatCard({ label, value, icon: Icon, tone = 'primary' }) {
   return (
-    <div className="card h-100 shadow-sm">
+    <div className="card stat-card h-100">
       <div className="card-body">
-        <div className="text-muted small text-uppercase">{label}</div>
-        <div className={`display-6 fw-semibold text-${tone}`}>{value}</div>
+        <span className={`stat-icon tone-${tone}`}>
+          <Icon size={22} aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <div className="stat-label">{label}</div>
+          <div className="stat-value">{value}</div>
+        </div>
       </div>
     </div>
   );
