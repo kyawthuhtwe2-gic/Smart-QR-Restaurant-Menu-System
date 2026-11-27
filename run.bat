@@ -37,8 +37,8 @@ echo Running migrations...
 php artisan migrate --force
 if errorlevel 1 exit /b 1
 
-echo Starting API on http://localhost:8000
-php artisan serve --host=localhost --port=8000
+echo Starting API on http://localhost:8000 and your LAN IP, port 8000
+php artisan serve --host=0.0.0.0 --port=8000
 exit /b 0
 
 :frontend
@@ -51,6 +51,6 @@ if not exist "node_modules" (
     if errorlevel 1 exit /b 1
 )
 
-echo Starting React app on http://localhost:5173
-call npm run dev -- --host localhost --port 5173
+echo Starting React app on http://localhost:5173 and your LAN IP, port 5173
+call npm run dev -- --host 0.0.0.0 --port 5173
 exit /b 0

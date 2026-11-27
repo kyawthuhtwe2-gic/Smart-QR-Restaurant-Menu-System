@@ -3,7 +3,9 @@ import axios from 'axios';
 export const TOKEN_KEY = 'smartqr_admin_token';
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+  // Default follows the host the page was opened from, so the same build works on
+  // localhost and from a phone on the LAN. Set VITE_API_URL to override (production).
+  baseURL: import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000/api/v1`,
   headers: { Accept: 'application/json' },
 });
 
@@ -37,3 +39,9 @@ export function parseApiError(error) {
 }
 
 export default client;
+
+/** Client for public (customer) endpoints: never sends admin credentials. */
+export const publicClient = axios.create({
+  baseURL: client.defaults.baseURL,
+  headers: { Accept: 'application/json' },
+});
